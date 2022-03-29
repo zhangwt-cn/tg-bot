@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"net/http"
@@ -9,14 +9,6 @@ import (
 )
 
 
-func main()  {
-
-	http.HandleFunc("/tgNotify", tgNotify)
-	err := http.ListenAndServe("0.0.0.0:9080", nil)
-	if err != nil {
-        log.Fatal("ListenAndServe", err)
-    }
-}
 // 返回实体
 type Resp struct {
 	Code	string `json:"code"`
