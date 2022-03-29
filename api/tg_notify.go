@@ -19,6 +19,7 @@ type Resp struct {
 type Notify struct {
 	Token     string  `json:"token"`
 	MsgText   string  `json:"msgText"`
+	ChatId    int64  `json:"chatId"`
 }
 
 
@@ -38,7 +39,7 @@ func TgNotify(writer http.ResponseWriter,  request *http.Request)  {
 	// 发送消息    
 	bot.Debug = true 
 	log.Printf("Authorized on account %s", bot.Self.UserName)     
- 	msg := tgbotapi.NewMessage(2109288988, notify.MsgText)   
+ 	msg := tgbotapi.NewMessage(notify.ChatId, notify.MsgText)   
 	if _, err := bot.Send(msg); err != nil {     
   		log.Panic(err)    
  	}  
