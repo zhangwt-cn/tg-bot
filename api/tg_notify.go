@@ -45,7 +45,7 @@ func TgNotify(writer http.ResponseWriter,  request *http.Request)  {
 	// 返回请求结果
 	var result Resp
 	result.Code = "200"
-	result.Msg = "消息已经发送：" +  notify.MsgText
+	result.Msg = "success"
 	if err := json.NewEncoder(writer).Encode(result); err != nil {
 		log.Panic(err)
 	}
