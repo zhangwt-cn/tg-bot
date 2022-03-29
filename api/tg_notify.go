@@ -22,7 +22,7 @@ type Notify struct {
 }
 
 
-func tgNotify(writer http.ResponseWriter,  request *http.Request)  {
+func TgNotify(writer http.ResponseWriter,  request *http.Request)  {
 	// json to Notify
 	var notify Notify
 	if err := json.NewDecoder(request.Body).Decode(&notify); err != nil {
