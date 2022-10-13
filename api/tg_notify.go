@@ -1,13 +1,18 @@
 package api
 
 import (
-	"net/http"
 	"encoding/json"
-	"log"
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"fmt"
+	"log"
+	"net/http"
+	"strings"
 )
 
+const(
+	MARKDOWN = "Markdown"
+	MARKDOWN_V2 = "MarkdownV2"
+	JSON = `{"chat_id":%v,"text":"%s", "parse_mode":"%s"}`
+)
 
 // 返回实体
 type Resp struct {
@@ -20,6 +25,7 @@ type Notify struct {
 	Token     string  `json:"token"`
 	MsgText   string  `json:"msgText"`
 	ChatId    int64  `json:"chatId"`
+	ParseMode string `json:"parseMode"`
 }
 
 
@@ -31,18 +37,13 @@ func TgNotify(writer http.ResponseWriter,  request *http.Request)  {
 		log.Panic(err)
 	}
 	// 创建bot
-	bot, err := tgbotapi.NewBotAPI(notify.Token)   
-	if err != nil {     
-		log.Panic(err)   
+	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", notify.Token)
+	if notify.ParseMode == "" {
+		notify.ParseMode = MARKDOWN
 	}
-	fmt.Println(bot)
-	// 发送消息    
-	bot.Debug = true 
-	log.Printf("Authorized on account %s", bot.Self.UserName)     
- 	msg := tgbotapi.NewMessage(notify.ChatId, notify.MsgText)   
-	if _, err := bot.Send(msg); err != nil {     
-  		log.Panic(err)    
- 	}  
+	data := fmt.Sprintf(JSON, notify.ChatId, notify.MsgText, notify.ParseMode)
+	resp, _ := http.Post(url, "application/json", strings.NewReader(data))
+	log.Printf("msg send return : %v", resp)
 	// 返回请求结果
 	var result Resp
 	result.Code = "200"
